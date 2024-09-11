@@ -1,3 +1,24 @@
+:root {
+  --blue: #3b7cc1;
+  --dark-blue: #22333b;
+  --grey-blue: #6c757d;
+  --green: #28a745;
+  --dark-green: #087532;
+  --purple: #6f42c1;
+  /* --green: #73a549; */
+  --aqua: #17a2b8;
+  --yellow: #e8cf42;
+  --red: #dc3545;
+  --light: #eae0d5;
+  --tan: #c6ac8e;
+  --brown: #5e503f;
+  --dark: #0a0908;
+  --white: #ffffff;
+  --off-white: #f8f8f6;
+  --black: #000000;
+  --grey: #6c757d;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +26,117 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--off-white);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+button {
+  padding: 1rem;
+  font-size: 1rem;
+  /* border: none; */
+  border: 2 px solid var(--green);
+  border-radius: 5px;
+  background-color: var(--green);
+  color: white;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--dark-green);
+}
+
+img {
+  border-radius: 10px;
+}
+
+h1 {
+  font-size: 2.8rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+}
+a {
+  text-decoration: none;
+  color: var(--green);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  max-width: 1450px;
+  margin: 0 auto;
+  align-items: center;
+  justify-items: center;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  margin: 3rem 0;
+  gap: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.hero-img img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  max-height: 470px;
+  aspect-ratio: 3 / 2;
+}
+
+input:focus {
+  outline: 1px solid var(--green);
+}
+
+.added-ingredients {
+  width: 60%;
+  height: 82px;
+  background-image: url(/public/media/paper.jpg);
+  background-size: cover;
+  background-position: 50% 5%;
+  padding: 2rem 4rem;
+  margin: auto;
+  flex-wrap: wrap;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.favorites-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.favorites-container > div {
+  width: 100%;
+  height: 100%;
+}
+
+.favorites-container > div img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 10px;
+  background-color: var(--dark);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.favorites-container > div img:hover {
+  transform: scale(1.023);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
