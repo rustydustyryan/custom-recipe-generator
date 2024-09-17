@@ -22,7 +22,7 @@ const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({ setDietaryRes
   };
 
   return (
-    <div className='dietary-restrictions' style={{ bottom: '0' }}>
+    <div className='dietary-restrictions' style={{ border: '1px solid #ccc', borderRadius: '8px', width: '72%', margin: 'auto', padding: '.5rem 0 2rem 0' }}>
       <h3>Select Dietary Restrictions</h3>
       <label style={{ marginRight: '1rem'}}>
         <input 

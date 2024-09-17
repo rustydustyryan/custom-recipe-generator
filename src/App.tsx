@@ -29,68 +29,69 @@ const App: React.FC = () => {
   const generateRecipe = async () => {
     setLoading(true);
     setError(null);
-  
+    const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
+    const restrictions = dietaryRestrictions.length > 0 ? dietaryRestrictions.join(',') : '';
+    const diet = dietaryRestrictions.includes('Vegan') ? 'vegan' : dietaryRestrictions.includes('Vegetarian') ? 'vegetarian' : ''; // Handle vegan/vegetarian
+   
     try {
-      const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
       const response = await axios.get(`https://api.spoonacular.com/recipes/findByIngredients`, {
         params: {
           ingredients: ingredients.join(','),
           apiKey,
-          number: 6,  // Number of recipes to fetch
+          intolerances: restrictions, // For intolerances like gluten-free, etc.
+          diet,  // For vegan/vegetarian
+          number: 6,
         }
       });
-
-      console.log('API Response:', response.data);  // Log the API response
   
-      // Extract recipe IDs and make another request to get detailed info
+      console.log('API Request with Restrictions:', response.config.params); // Log the API request parameters for debugging
+  
       const recipeIds = response.data.map((recipe: any) => recipe.id);
       const detailedRecipes = await Promise.all(recipeIds.map(async (id: number) => {
         const recipeResponse = await axios.get(`https://api.spoonacular.com/recipes/${id}/information`, {
-          params: {
-            apiKey
-          }
+          params: { apiKey }
         });
         return recipeResponse.data;
       }));
   
-      setRecipes(detailedRecipes); // Store the detailed recipes in state
+      setRecipes(detailedRecipes);
     } catch (error) {
       console.error('Error fetching recipes:', error);
       setError('Failed to fetch recipes. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const fetchRecipes = async (selectedCategory: string, currentPage = 1) => {
     setLoading(true);
-    setError(null); // Reset error
-    setCategory(selectedCategory); // Update category based on image clicked
+    setError(null);
+    setCategory(selectedCategory);
+    const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
+    const restrictions = dietaryRestrictions.length > 0 ? dietaryRestrictions.join(',') : '';
+    const diet = dietaryRestrictions.includes('Vegan') ? 'vegan' : dietaryRestrictions.includes('Vegetarian') ? 'vegetarian' : '';
   
     try {
-      const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
-      const restrictions = dietaryRestrictions.length > 0 ? dietaryRestrictions.join(', ') : '';
-  
-      console.log('Dietary Restrictions:', restrictions);  // Log the restrictions
-  
       const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch`, {
         params: {
           apiKey,
           includeIngredients: ingredients.join(','),
           intolerances: restrictions,
+          diet,  // For vegan/vegetarian
           type: selectedCategory.toLowerCase(),
-          imageType: 'jpg',  // Request higher quality image type
+          imageType: 'jpg',
           number: 6,
-          offset: (currentPage - 1) * 8, // Adjust offset based on page
+          offset: (currentPage - 1) * 8,
           addRecipeInformation: true
         }
       });
   
+      console.log('API Request with Restrictions:', response.config.params); // Log the API request parameters for debugging
+  
       if (response.data.results.length === 0) {
-        setMoreRecipesAvailable(false); // No more recipes to load
+        setMoreRecipesAvailable(false);
       }
-
-      // If it's the first page, replace the recipes; otherwise, append them
+  
       if (currentPage === 1) {
         setRecipes(response.data.results);
       } else {
@@ -102,7 +103,7 @@ const App: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   // Handle "Load More" button click
   const loadMoreRecipes = () => {

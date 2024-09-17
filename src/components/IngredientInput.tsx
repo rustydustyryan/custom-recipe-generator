@@ -35,7 +35,7 @@ const IngredientInput: React.FC<IngredientInputProps> = ({ ingredients, addIngre
 
       <div className='added-ingredients' style={{ marginTop: '1rem', display: 'flex' }}>
         {ingredients.map((ing, index) => (
-          <div key={index} style={{ display: 'flex', height: '5px', padding: '0 1rem', marginTop: '-.6rem' }}>
+          <div key={index} style={{ display: 'flex', height: '5px', padding: '0 1rem', marginTop: '-.7rem' }}>
             <span style={{ marginRight: '0.1rem' }}>{ing}</span>
             <HiOutlineX 
               className='outline-x' 
@@ -47,7 +47,7 @@ const IngredientInput: React.FC<IngredientInputProps> = ({ ingredients, addIngre
       </div>
 
       {/* Generate Recipe Button */}
-      <div style={{ marginTop: '1rem' }}>
+      <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
         <button className='accent-btn' onClick={generateRecipe}>
           Generate Recipes <IoSparklesSharp style={{ margin: '0 0 -.1rem .1rem', fontSize: '1.1rem' }}/>
         </button>

@@ -22,7 +22,7 @@ const RecipeCategories: React.FC<RecipeCategoriesProps> = ({ fetchRecipes }) => 
       <h2 style={{ textAlign: 'center', margin: '0' }}>Favorites</h2>
       <div className='favorites-container'>
         <div>
-          <h3>Main Course</h3>
+          <h3>Main Courses</h3>
           <img 
             src='../media/pasta.jpg' 
             alt='Main Course' 
