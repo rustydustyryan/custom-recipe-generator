@@ -24,18 +24,19 @@ const IngredientInput: React.FC<IngredientInputProps> = ({ ingredients, addIngre
     <>
       <div>
         <input 
-          type="text" 
+          type="text"
+          className='ingredient-input' 
           value={ingredient} 
           onChange={(e) => setIngredient(e.target.value)} 
           placeholder="Enter an ingredient" 
-          style={{ marginRight: '1rem', padding: '.93rem', fontSize: '1rem', width: '49%', borderRadius: '5px', border: '1px solid #ccc' }}
+          style={{ padding: '.93rem', fontSize: '1rem', borderRadius: '5px', border: '1px solid #ccc' }}
         />
         <button onClick={handleAdd}>Add Ingredient <HiOutlinePlus style={{ margin: '0 0 -.14rem 0' }} /></button>
       </div>
 
-      <div className='added-ingredients' style={{ marginTop: '1rem', display: 'flex' }}>
+      <div className='added-ingredients' style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
         {ingredients.map((ing, index) => (
-          <div key={index} style={{ display: 'flex', height: '5px', padding: '0 1rem', marginTop: '-.7rem' }}>
+          <div key={index} style={{ display: 'flex', height: '5px', padding: '0 0.5rem', marginTop: '-.3rem' }}>
             <span style={{ marginRight: '0.1rem' }}>{ing}</span>
             <HiOutlineX 
               className='outline-x' 
@@ -47,7 +48,7 @@ const IngredientInput: React.FC<IngredientInputProps> = ({ ingredients, addIngre
       </div>
 
       {/* Generate Recipe Button */}
-      <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+      <div style={{ marginTop: '1rem', marginBottom: '2rem' }}>
         <button className='accent-btn' onClick={generateRecipe}>
           Generate Recipes <IoSparklesSharp style={{ margin: '0 0 -.1rem .1rem', fontSize: '1.1rem' }}/>
         </button>

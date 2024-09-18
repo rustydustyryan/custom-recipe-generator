@@ -4,9 +4,10 @@ interface RecipeGeneratorProps {
   recipes: any[];
   loading: boolean;
   error: string | null;
+  loadingMore: boolean;
 }
 
-const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ recipes, loading, error }) => {
+const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ recipes, loading, error, loadingMore }) => {
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -43,6 +44,8 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ recipes, loading, err
           </div>
         ))}
       </div>
+
+      {loadingMore && <p>Loading more recipes...</p>} {/* Show a loading message while loading more */}
     </div>
   );
 };

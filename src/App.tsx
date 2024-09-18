@@ -12,9 +12,10 @@ const App: React.FC = () => {
   const [category, setCategory] = useState<string>('');
   const [recipes, setRecipes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false); // Separate state for "Load More"
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1); // Track the current page
-  const [moreRecipesAvailable, setMoreRecipesAvailable] = useState(true); // To handle 'Load More' button visibility
+  const [page, setPage] = useState(1);
+  const [moreRecipesAvailable, setMoreRecipesAvailable] = useState(true);
 
   const addIngredient = (ingredient: string) => {
     setIngredients([...ingredients, ingredient]);
@@ -22,30 +23,29 @@ const App: React.FC = () => {
 
   const removeIngredient = (index: number) => {
     const newIngredients = [...ingredients];
-    newIngredients.splice(index, 1); // Remove the ingredient at the specified index
+    newIngredients.splice(index, 1);
     setIngredients(newIngredients);
   };
 
   const generateRecipe = async () => {
     setLoading(true);
     setError(null);
-    const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
-    const restrictions = dietaryRestrictions.length > 0 ? dietaryRestrictions.join(',') : '';
-    const diet = dietaryRestrictions.includes('Vegan') ? 'vegan' : dietaryRestrictions.includes('Vegetarian') ? 'vegetarian' : ''; // Handle vegan/vegetarian
-   
+
     try {
+      const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
+      const restrictions = dietaryRestrictions.length > 0 ? dietaryRestrictions.join(',') : '';
+      const diet = dietaryRestrictions.includes('Vegan') ? 'vegan' : dietaryRestrictions.includes('Vegetarian') ? 'vegetarian' : '';
+  
       const response = await axios.get(`https://api.spoonacular.com/recipes/findByIngredients`, {
         params: {
           ingredients: ingredients.join(','),
           apiKey,
-          intolerances: restrictions, // For intolerances like gluten-free, etc.
-          diet,  // For vegan/vegetarian
+          intolerances: restrictions,
+          diet,
           number: 6,
         }
       });
-  
-      console.log('API Request with Restrictions:', response.config.params); // Log the API request parameters for debugging
-  
+
       const recipeIds = response.data.map((recipe: any) => recipe.id);
       const detailedRecipes = await Promise.all(recipeIds.map(async (id: number) => {
         const recipeResponse = await axios.get(`https://api.spoonacular.com/recipes/${id}/information`, {
@@ -53,7 +53,7 @@ const App: React.FC = () => {
         });
         return recipeResponse.data;
       }));
-  
+
       setRecipes(detailedRecipes);
     } catch (error) {
       console.error('Error fetching recipes:', error);
@@ -61,23 +61,24 @@ const App: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   const fetchRecipes = async (selectedCategory: string, currentPage = 1) => {
-    setLoading(true);
+    setLoading(currentPage === 1); // Only set loading true on initial load
     setError(null);
     setCategory(selectedCategory);
-    const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
-    const restrictions = dietaryRestrictions.length > 0 ? dietaryRestrictions.join(',') : '';
-    const diet = dietaryRestrictions.includes('Vegan') ? 'vegan' : dietaryRestrictions.includes('Vegetarian') ? 'vegetarian' : '';
   
     try {
+      const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
+      const restrictions = dietaryRestrictions.length > 0 ? dietaryRestrictions.join(',') : '';
+      const diet = dietaryRestrictions.includes('Vegan') ? 'vegan' : dietaryRestrictions.includes('Vegetarian') ? 'vegetarian' : '';
+  
       const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch`, {
         params: {
           apiKey,
           includeIngredients: ingredients.join(','),
           intolerances: restrictions,
-          diet,  // For vegan/vegetarian
+          diet,
           type: selectedCategory.toLowerCase(),
           imageType: 'jpg',
           number: 6,
@@ -85,13 +86,11 @@ const App: React.FC = () => {
           addRecipeInformation: true
         }
       });
-  
-      console.log('API Request with Restrictions:', response.config.params); // Log the API request parameters for debugging
-  
+
       if (response.data.results.length === 0) {
         setMoreRecipesAvailable(false);
       }
-  
+
       if (currentPage === 1) {
         setRecipes(response.data.results);
       } else {
@@ -103,20 +102,26 @@ const App: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
-  // Handle "Load More" button click
-  const loadMoreRecipes = () => {
+  const loadMoreRecipes = async () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    fetchRecipes(category, nextPage);
+    setLoadingMore(true);
+
+    try {
+      await fetchRecipes(category, nextPage);
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   return (
     <div className='app'>
+          <h1 style={{ textAlign: 'center' }}>Custom Recipe Generator</h1>
+          <h2 style={{ textAlign: 'center' }}>Find tasty recipes based on ingredients you already have!</h2>
       <div className='header'>
         <div>
-          <h1>Custom Recipe Generator</h1>
           <IngredientInput 
             ingredients={ingredients} 
             addIngredient={addIngredient} 
@@ -127,7 +132,6 @@ const App: React.FC = () => {
         </div>
         <div className='hero-img'>
           <img src='../media/ingredients.jpg' alt='Ingredients' />
-          <h2>Find tasty recipes based on ingredients you already have!</h2>
         </div>
       </div>
       
@@ -142,6 +146,7 @@ const App: React.FC = () => {
           recipes={recipes} 
           loading={loading}
           error={error}
+          loadingMore={loadingMore}
         />
       </div>
 
@@ -151,6 +156,7 @@ const App: React.FC = () => {
           <button onClick={loadMoreRecipes} style={{ padding: '1rem', fontSize: '1rem' }}>
             Load More Recipes
           </button>
+          {loadingMore && <p>Loading more recipes...</p>}
         </div>
       )}
 
