@@ -23,7 +23,7 @@ const RecipeGenerator: React.FC<RecipeGeneratorProps> = ({ recipes, loading, err
   return (
     <div>
       <h2>Recipes:</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4rem', background: '#e9e8e8', padding: '1rem 2rem', borderRadius: '8px', marginBottom: '2rem' }}>
+      <div className='recipes-container' style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4rem', background: '#e9e8e8', padding: '1rem 2rem', borderRadius: '8px', marginBottom: '2rem' }}>
         {recipes.map(recipe => (
           <div key={recipe.id}>
             <h3><b>{recipe.title}</b></h3>
